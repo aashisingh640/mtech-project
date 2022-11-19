@@ -1,0 +1,40 @@
+<header class="d-flex align-items-center">
+
+    <ul class="list-group list-group-horizontal-sm">
+        <li
+            class="list-group-item d-flex justify-content-between align-items-center" 
+            *ngFor="let link of links" 
+            [ngClass]="{'selected': link.selected }"
+            (click)="loadLink(link)">
+                <span class="slds-truncate" title={{link.title}}>{{ link.title }}</span>
+        </li>
+    </ul>
+
+    <div class="profile d-flex p-2 align-items-center">
+        <div class="name">
+          {{ user.Name }}
+        </div>
+
+        <div class="actions ml-2">
+          <span nglDropdown [(open)]="open">
+            
+            <button class="btn-transparent d-flex align-items-center p-2" nglDropdownTrigger>
+              <img src="./../../../assets/images/userAvatar.jpeg" alt="" class="img-circle" />
+              <i class="icon feather icon-chevron-down"></i>
+            </button>
+
+            <div class="slds-dropdown slds-dropdown_right">
+              <ul class="dropdown__list m-0" role="menu">
+                <li class="slds-dropdown__item">
+                  <a role="menuitem" nglDropdownItem (click)="logout(); open = false;">
+                    <p class="slds-truncate">Logout</p>
+                    <img src = "./../../../assets/icons/feather/log-out.svg">
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+          </span>
+        </div>
+      </div>
+</header>

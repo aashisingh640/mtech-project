@@ -1,0 +1,13 @@
+
+<div class="m-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title d-inline-block">{{ config.title }}</h5>
+
+            <ngx-charts-pie-chart [view]="[700, 400]" [scheme]="colorScheme" [results]="data" [legend]="false" [explodeSlices]="false"
+                [labels]="true" [doughnut]="doughnut" [gradient]="false" [legendPosition]="'right'" [legend]="true">
+            </ngx-charts-pie-chart>
+            
+        </div>
+    </div>
+</div>

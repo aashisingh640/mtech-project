@@ -1,0 +1,72 @@
+<div class="header p-4">
+    <h2> Upload Invoices </h2>
+
+    <div class="partition p-4">
+
+        <div class="section p-4">
+            <h2>Single Invoice</h2>
+            <div class="note">
+                <span> Note: </span>
+                <ul style="list-style:disc;">
+                    <li>
+                        Upload one file at a single time.
+                    </li>
+                    <li>
+                        Extension supported - .pdf
+                    </li>
+                </ul>
+            </div>
+
+            <button class="btn btn-outline-primary" type="button" (click)="filePicker1.click()"> Browse File
+            </button>
+            <input type="file" #filePicker1 class="invisible position-absolute left-0 w-100 d-none" accept=".pdf"
+                onclick="this.value = null" (change)="onFileChange($event)" />
+
+            <div *ngIf="uploadedFile">
+                <span class="my-4 d-block">
+                    Selected File : {{uploadedFile.name}} ({{ (uploadedFile.size / 1024) | number: '1.2-2' }} KB)
+                </span>
+
+                <button class="btn btn-sm btn-primary" type="button" (click)="uploadPDF()"> Upload Selected File
+                </button>
+
+            </div>
+        </div>
+
+        <div class="section p-4">
+            <h2>Invoices in Bulk</h2>
+            <div class="note">
+                <span> Note: </span>
+                <ul style="list-style:disc;">
+                    <li>
+                        Upload one file at a single time.
+                    </li>
+                    <li>
+                        Extension supported - .zip
+                    </li>
+                </ul>
+            </div>
+
+            <button class="btn btn-outline-primary browse" type="button" (click)="filePicker2.click()"> Browse File
+            </button>
+            <input type="file" #filePicker2 class="invisible position-absolute left-0 w-100 d-none" accept=".zip"
+                onclick="this.value = null" (change)="onFileChange($event)" />
+
+            <div *ngIf="uploadedFile">
+                <span class="my-4 d-block">
+                    Selected File : {{uploadedFile.name}} ({{ (uploadedFile.size / 1024) | number: '1.2-2' }} KB)
+                </span>
+
+                <button class="btn btn-sm btn-primary" type="button" (click)="uploadZip()"> Upload Selected File
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<ngl-toast *ngIf="showToast" [variant]="toastVariant" (close)="showToast = false;">
+    <span class="slds-text-heading_small">{{ toastMsg }}</span>
+</ngl-toast>

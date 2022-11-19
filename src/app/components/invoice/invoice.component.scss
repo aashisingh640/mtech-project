@@ -1,0 +1,11 @@
+@import './../../../styles.scss';
+
+app-invoice:host {
+    .body {
+        background-color: map-get($map: $colors, $key: light-grey);
+        padding: 1rem;
+        min-height: 92vh;
+    }
+}
+
+

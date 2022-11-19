@@ -1,0 +1,126 @@
+<div class="body">
+
+    <div class="header">
+        <h5 class="m-0 font-weight-bold">Edit {{ record.Name }}</h5>
+        <div>
+            <ng-container *ngFor="let option of userActions">
+                <button class="btn btn-primary save-btn" type="button" (click)="takeUserAction(option)"> {{ option.label }} </button>
+            </ng-container>
+            <button class="btn btn-outline-primary save-btn" type="button" (click)="save()"> Save </button>
+            <button class="btn btn-outline-primary" type="button" (click)="cancel()"> Cancel </button>
+        </div>
+    </div>
+
+    <section class="detail-wrapper">
+
+        <div class="d-flex">   
+            <aside class="col col-2">
+              <ul class="list-group aside-list-top text-center">
+                
+                <ng-template ngFor let-item [ngForOf]="menuList">
+                  <li class="list-group-item" 
+                    [ngClass]="{'selected': item.selected }" 
+                    (click)="selectMenu(item)">
+                    <span>{{ item.label }}</span>
+                  </li>
+                </ng-template>
+
+              </ul>
+            </aside>
+        
+            <div class="content col col-10">
+
+                <div *ngIf="selectedMenu === 'details'">
+                  <div class="form row">
+
+                    <ng-container *ngFor="let column of formColumns">
+                        <div class="form-group col col-md-3">
+  
+                            <ngl-input *ngIf="column.type === 'string' || column.type === 'reference' || column.type === 'double' || column.type === 'percent' || column.type === 'id'" [label]="column.label">
+                              <input ngl type="input" [required]="column.required" [placeholder]="'Enter ' + column.label" [value]="record[column.name]" [disabled]="column.readonly" (change)="onChange($event, column.name)">
+                            </ngl-input>
+                            
+                            <ngl-combobox *ngIf="column.type === 'picklist'" [label]="column.label" [options]="column.picklistValues" [(open)]="column.open" [(selection)]="record[column.name]">
+                              <input nglCombobox placeholder="Select an Option" [disabled]="column.readonly">
+                            </ngl-combobox>
+                            
+                            <ngl-checkbox-toggle *ngIf="column.type === 'boolean'" [label]="column.label">
+                              <input ngl type="checkbox" disabled="true" [disabled]="column.readonly">
+                            </ngl-checkbox-toggle>
+                            
+                            <ngl-datepicker-input *ngIf="column.type === 'date' || column.type === 'datetime'" [label]="column.label" [(ngModel)]="record[column.name]" #dt="ngModel" showToday="true" [disabled]="column.readonly">
+                              <input nglDatepickerInput type="text">
+                            </ngl-datepicker-input>
+                            
+                            <ngl-textarea *ngIf="column.type === 'textarea'" [label]="column.label">
+                              <textarea ngl [placeholder]="'Enter ' + column.label" [disabled]="column.readonly"></textarea>
+                            </ngl-textarea>
+  
+                        </div>
+                    </ng-container>
+
+                  </div>
+
+                  <div class="comment-history">
+
+                    <h5 class="comment-history-label font-weight-bold"> Comment History </h5>
+
+                    <div class="comment-history-text">
+                      <ng-container *ngFor="let val of comments; let i = index;">
+                        <span class="pr-2 font-weight-bold"> {{ val.name }} | </span>
+                        <span class="comment-date"> {{ val.modifiedDate | date }} </span>
+                        <span class="d-block pt-2" [ngClass]="{'pb-4' : i + 1 !== comments.length}"> {{ val.comment }} </span>
+                      </ng-container>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <div class="px-3" *ngIf="selectedMenu === 'line'">
+
+                    <app-table [rows]="lineRows" [columns]="lineColumns">
+                    </app-table>
+                    
+                </div>
+
+                <div *ngIf="selectedMenu === 'attachment'">
+
+                    <div class="attachment-wrapper">
+                        <div class="card attachment-card p-2" *ngFor="let attachment of attachments">
+                            <div class="item d-flex align-items-center mb-2 mt-1">
+                              <div class="file-type">{{ attachment.FileType }}</div>
+                              <div class="sub-heading" [title]="attachment.Title">{{ attachment.Title }}</div>
+                            </div>
+                            <div class="item">
+                              <span>Last Modified:</span> {{ attachment.LastModifiedDate | date }}
+                            </div>
+                            <div class="item">
+                              <span>File Size:</span> {{ (attachment.ContentSize / 1048576) | number: '1.2-2' }} MB
+                            </div>
+                            
+                            <div class="footer d-flex justify-content-between align-items-center mt-2">
+                              <div class="actions">
+                                <button class="btn btn-transparent" (click)="downloadAttachment(attachment, true)" title="Download Attachment">
+                                  <img src = "./../../../assets/icons/feather/download.svg"/>
+                                </button>
+                                <button class="btn btn-transparent" (click)="downloadAttachment(attachment, false)" title="View Attachment">
+                                  <img src = "./../../../assets/icons/feather/eye.svg">
+                                </button>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+
+                </div>
+                
+            </div>
+          </div>
+
+    </section>
+
+</div>
+
+<ngl-toast *ngIf="showToast" [variant]="toastVariant" (close)="showToast = false;">
+  <span class="slds-text-heading_small">{{ toastMsg }}</span>
+</ngl-toast>

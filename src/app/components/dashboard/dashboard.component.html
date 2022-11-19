@@ -1,0 +1,9 @@
+<div class="body">
+
+    <div class="row">
+        <ng-container *ngFor="let config of chartConfig">
+            <app-chart class="col" [config]="config"></app-chart>
+        </ng-container>
+    </div>
+
+</div>
