@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const multipart = require('connect-multiparty');
-const multipartMiddleware = multipart({ uploadDir: './temp' });
+const multipartMiddleware = multipart({ uploadDir: './tmp' });
 
 const userController = require('./../controllers/userController');
 const invoiceController = require('../controllers/invoiceController');
