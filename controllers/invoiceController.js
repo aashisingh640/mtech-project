@@ -4,9 +4,9 @@ const path = require('path');
 const moment = require('moment');
 const jsforce = require('jsforce');
 const request = require('request');
-const formidable = require('formidable');
 const admZip = require('adm-zip');
-async = require('async');
+const os = require('os');
+const TEMP_FOLDER = './tempFolder';
 
 function uploadPDF(req, res) {
     try {
@@ -18,7 +18,7 @@ function uploadPDF(req, res) {
             return res.status(401).json({ msg: 'Access Token or Instance url is missing' });
         }
 
-        fs.readdir('./tmp', (err, files) => {
+        fs.readdir(TEMP_FOLDER, (err, files) => {
 
             if (err) {
                 return res.status(500).json({ error });
@@ -29,7 +29,7 @@ function uploadPDF(req, res) {
             }
 
             const fileName = files[0];
-            const filePath = path.join('./tmp', fileName);
+            const filePath = path.join(TEMP_FOLDER, fileName);
 
             const pdfParser = new PDFParser(null, 1);
             pdfParser.loadPDF(filePath);
@@ -100,7 +100,7 @@ function uploadZip(req, res) {
             return res.status(401).json({ msg: 'Access Token or Instance url is missing' });
         }
 
-        fs.readdir('./tmp', async (err, files) => {
+        fs.readdir(TEMP_FOLDER, async (err, files) => {
 
             if (err) {
                 return res.status(500).json({ msg: error.message });
@@ -111,7 +111,7 @@ function uploadZip(req, res) {
             }
 
             const fileName = files[0];
-            const filePath = path.join('./tmp', fileName);
+            const filePath = path.join(TEMP_FOLDER, fileName);
 
             const zip = new admZip(filePath);
             const zipEntries = zip.getEntries();
@@ -121,7 +121,7 @@ function uploadZip(req, res) {
                 console.log('name ---', entry.name, entry);
                 if (entry.name && !entry.name.startsWith('._')) {
                     fileNames.push(entry.name);
-                    zip.extractEntryTo(entry, './tmp', false, true);
+                    zip.extractEntryTo(entry, TEMP_FOLDER, false, true);
                 } 
             })
 
@@ -143,7 +143,7 @@ function readFiles(fileNames, token, instanceUrl) {
 
         async.eachLimit(fileNames, 1, function (file, callback) {
 
-            const filePath = path.join('./tmp', file);
+            const filePath = path.join(TEMP_FOLDER, file);
 
             fs.readFile(filePath, (err, fileData) => {
                 if (err) {
@@ -538,13 +538,13 @@ async function getFileData(req, res) {
             }
         };
 
-        const stream = request(config).pipe(fs.createWriteStream(`./tmp/${name}`, { autoClose: true }));
+        const stream = request(config).pipe(fs.createWriteStream(`${TEMP_FOLDER}/${name}`, { autoClose: true }));
         stream.on('finish', () => {
             fs.createReadStream(stream.path, { bufferSize: 64 * 1024 }).pipe(res);
             setTimeout(() => {
-                fs.exists(path.join('./tmp', name), exists => {
+                fs.exists(path.join(TEMP_FOLDER, name), exists => {
                     if (exists) {
-                        fs.unlink(path.join('./tmp', name), err => {
+                        fs.unlink(path.join(TEMP_FOLDER, name), err => {
                            console.log(err);
                         });
                     }
