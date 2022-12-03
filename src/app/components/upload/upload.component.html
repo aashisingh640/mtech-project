@@ -50,11 +50,11 @@
             <button class="btn btn-outline-primary browse" type="button" (click)="filePicker2.click()"> Browse File
             </button>
             <input type="file" #filePicker2 class="invisible position-absolute left-0 w-100 d-none" accept=".zip"
-                onclick="this.value = null" (change)="onFileChange($event)" />
+                onclick="this.value = null" (change)="onZipFileChange($event)" />
 
-            <div *ngIf="uploadedFile">
+            <div *ngIf="uploadedZipFile">
                 <span class="my-4 d-block">
-                    Selected File : {{uploadedFile.name}} ({{ (uploadedFile.size / 1024) | number: '1.2-2' }} KB)
+                    Selected File : {{uploadedZipFile.name}} ({{ (uploadedZipFile.size / 1024) | number: '1.2-2' }} KB)
                 </span>
 
                 <button class="btn btn-sm btn-primary" type="button" (click)="uploadZip()"> Upload Selected File

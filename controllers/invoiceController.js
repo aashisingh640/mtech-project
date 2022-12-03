@@ -5,7 +5,7 @@ const moment = require('moment');
 const jsforce = require('jsforce');
 const request = require('request');
 const admZip = require('adm-zip');
-const os = require('os');
+const async = require('async');
 const TEMP_FOLDER = './tempFolder';
 
 function uploadPDF(req, res) {
